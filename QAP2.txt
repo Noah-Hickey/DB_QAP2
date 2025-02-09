@@ -1,0 +1,26 @@
+QAP 2 - SD 12
+Noah Hickey
+
+Problem 1: University Course Enrollment
+
+Student Table 
+======================================================================
+
+CREATE TABLE students (
+student_id SERIAL PRIMARY KEY,
+first_name VARCHAR(50) NOT NULL,
+last_name VARCHAR(50) NOT NULL,
+email VARCHAR(100) NOT NULL,
+school_enrollment_date DATE NOT NULL
+);
+======================================================================
+
+Professor Table
+======================================================================
+
+CREATE TABLE professors (
+prof_id SERIAL PRIMARY KEY,
+first_name VARCHAR(50) NOT NULL,
+last_name VARCHAR(50) NOT NULL,
+department VARCHAR(100) NOT NULL
+)
