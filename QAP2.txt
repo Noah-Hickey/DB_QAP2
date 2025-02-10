@@ -48,3 +48,67 @@ PRIMARY KEY (student_id,course_id)
 );
 ======================================================================
 
+
+Insertions into students table
+===============================================================================================
+
+INSERT INTO students (student_id, first_name, last_name, email, school_enrollment_date)
+VALUES 
+    ('1001', 'Nathaniel', 'Price', 'natprice@yahoo.com', '2023-09-12'),
+	('1002', 'Grace', 'Hickman', 'grhick99@outlook.com', '2023-09-13'),
+	('1003', 'Pope', 'Hartman', 'popeheart@yahoo.com', '2024-10-01'),
+	('1004', 'Kimberley', 'Watson', 'kimber;eywats@gmail.com', '2025-01-05'),
+	('1005', 'Jack', 'Goodyear', 'jackgoodyear243@hotmail.com', '2025-01-05');
+===============================================================================================
+
+Insertions into professors table
+===============================================================================================
+INSERT INTO professors (prof_id, first_name, last_name, department)
+VALUES 
+    ('101', 'Kenny', 'Benson', 'Mathematics'),
+	('102', 'Tara', 'McConnor', 'Anthropology'),
+	('103', 'Lucille', 'Batts', 'Chemistry');
+===============================================================================================
+
+Insertions into courses table
+===============================================================================================
+INSERT INTO courses (course_id, course_name, course_description, professor_id)
+VALUES 
+    ('101', 'Physics 101', 'Learning the basics of Pyhsics.', '103'),
+	('102', 'Mathematics 102', 'Learning fundamentals of Math.', '101'),
+	('103', 'Intro to Anthropology 103', 'Learning about the fundamentals of Anthropology.', '102');
+===============================================================================================
+
+Enroll students into classes
+===============================================================================================
+INSERT INTO enrollments (student_id, course_id, enrollment_date)
+VALUES
+	(1001, 101, '2025-02-04'), 
+    (1002, 102, '2025-02-05'), 
+    (1003, 103, '2025-02-05'), 
+    (1004, 101, '2025-02-08'),
+	(1004, 102, '2025-02-08'),
+    (1005, 102, '2025-02-09');
+===============================================================================================
+
+Retrieve names of students enrolled in Physics 101 - Got help with ChatGPT for this.
+===============================================================================================
+SELECT CONCAT(s.first_name, ' ', s.last_name) AS full_name
+FROM students s
+JOIN enrollments e ON s.student_id = e.student_id
+JOIN courses c ON e.course_id = c.course_id
+WHERE c.course_name = 'Physics 101';
+===============================================================================================
+
+Retrieve names of all professors - Got help with ChatGPT for this.
+===============================================================================================
+SELECT course_name, CONCAT(first_name, ' ', last_name) AS professor_full_name
+FROM courses
+JOIN professors ON professor_id = prof_id;
+===============================================================================================
+
+Retrieve all courses that have students enrolled in them. - Got help with ChatGPT for this.
+===============================================================================================
+SELECT DISTINCT c.course_name
+FROM courses c
+JOIN enrollments e ON c.course_id = e.course_id;
