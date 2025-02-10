@@ -57,7 +57,7 @@ VALUES
     ('1001', 'Nathaniel', 'Price', 'natprice@yahoo.com', '2023-09-12'),
 	('1002', 'Grace', 'Hickman', 'grhick99@outlook.com', '2023-09-13'),
 	('1003', 'Pope', 'Hartman', 'popeheart@yahoo.com', '2024-10-01'),
-	('1004', 'Kimberley', 'Watson', 'kimber;eywats@gmail.com', '2025-01-05'),
+	('1004', 'Kimberley', 'Watson', 'kimberleywats@gmail.com', '2025-01-05'),
 	('1005', 'Jack', 'Goodyear', 'jackgoodyear243@hotmail.com', '2025-01-05');
 ===============================================================================================
 
@@ -112,3 +112,64 @@ Retrieve all courses that have students enrolled in them. - Got help with ChatGP
 SELECT DISTINCT c.course_name
 FROM courses c
 JOIN enrollments e ON c.course_id = e.course_id;
+===============================================================================================
+
+Update student email
+===============================================================================================
+UPDATE students
+SET email = 'kimbwat@gmail.com'
+WHERE first_name = 'Kimberley' AND last_name = 'Watson';
+===============================================================================================
+
+Remove a student from one of their courses
+===============================================================================================
+DELETE FROM enrollments
+WHERE student_id = '1003'
+===============================================================================================
+
+
+
+Problem 2: Online Store Inventory and Orders System
+
+Create Products Table
+===============================================================================================
+CREATE TABLE products (
+id SERIAL PRIMARY KEY,
+product_name VARCHAR(50) NOT NULL,
+price DECIMAL(10,2) NOT NULL,
+stock_quantity INT NOT NULL
+);
+===============================================================================================
+
+Create Customers Table
+===============================================================================================
+CREATE TABLE customers (
+id SERIAL PRIMARY KEY,
+first_name VARCHAR(50) NOT NULL,
+last_name VARCHAR(50) NOT NULL,
+email VARCHAR(100) NOT NULL
+);
+===============================================================================================
+
+Create Orders Table
+===============================================================================================
+CREATE TABLE orders (
+id SERIAL PRIMARY KEY,
+customer_id INT NOT NULL,
+FOREIGN KEY (customer_id) REFERENCES customers(id),
+order_date DATE NOT NULL
+);
+===============================================================================================
+
+Create Order Items Table
+===============================================================================================
+CREATE TABLE order_items (
+order_id SERIAL, 
+FOREIGN KEY (order_id) REFERENCES orders(id),
+product_id SERIAL,
+FOREIGN KEY (product_id) REFERENCES products(id),
+quantity INT NOT NULL,
+PRIMARY KEY (order_id, product_id)
+);
+===============================================================================================
+
