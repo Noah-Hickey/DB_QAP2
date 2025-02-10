@@ -173,3 +173,94 @@ PRIMARY KEY (order_id, product_id)
 );
 ===============================================================================================
 
+Inserting Data
+===============================================================================================
+INSERT INTO products (id, product_name, price, stock_quantity)
+VALUES 
+    ('001','Basic Laptop','350.00','75'),
+	('002','High-End Laptop','880.50','50'),
+	('003','Basic Desktop PC','545.00','68'),
+	('004','Smart Tablet','500.00','40'),
+	('005','Keyboard & Mouse','80.00','90'),
+	('006','Screen Cleaner','20.00','84');
+
+INSERT INTO customers (id, first_name, last_name, email)
+VALUES 
+    ('001','Barry','Hill','barhill23@hotmail.com'),
+	('002','Jennifer','Martinez','Jen.Martinez07@outlook.com'),
+	('003','Shane','McDonald','shmcdonald0202@yahoo.com'),
+	('004','Darius','Russell','Darius_Russell@gmail.com');
+
+INSERT INTO orders (customer_id, order_date) 
+VALUES 
+    (1, '2024-02-10'),
+    (2, '2024-02-11'),
+    (3, '2024-02-12'),
+    (4, '2024-02-13'),
+    (1, '2024-02-14');
+
+INSERT INTO order_items (order_id, product_id, quantity)
+VALUES 
+    (1, 1, 2),  
+    (1, 5, 1),  
+    (2, 2, 1),  
+    (2, 3, 1),  
+    (3, 4, 2),  
+    (3, 6, 3),  
+    (4, 3, 1),  
+    (4, 5, 2),  
+    (5, 2, 1),  
+    (5, 4, 1);  
+===============================================================================================
+
+Get names and stock quantities of products
+===============================================================================================
+SELECT product_name, stock_quantity
+FROM products;
+===============================================================================================
+
+
+Get product name and quantity for an order - Order 3 returned 2 smart tablets and 3 screen cleaners.
+======================================================================================================
+SELECT product_name, quantity
+FROM order_items
+JOIN products ON product_id = id
+WHERE order_id = 003;
+
+======================================================================================================
+
+Get all orders placed by a customer - Chat GPT helped explain to me about this one.
+======================================================================================================
+SELECT orders.id AS order_id, 
+       order_items.product_id, 
+       products.product_name, 
+       order_items.quantity
+FROM orders
+JOIN order_items ON orders.id = order_items.order_id
+JOIN products ON order_items.product_id = products.id
+WHERE orders.customer_id = 1;
+======================================================================================================
+
+Updates to simulate the reduction of stock
+======================================================================================================
+UPDATE products
+SET stock_quantity = stock_quantity - (
+    SELECT quantity FROM order_items 
+    WHERE order_items.product_id = products.id
+    AND order_items.order_id = 1
+)
+WHERE EXISTS (
+    SELECT 1 FROM order_items 
+    WHERE order_items.product_id = products.id
+    AND order_items.order_id = 1
+);
+======================================================================================================
+
+Deletes Order 1 - Had to do order_items first as to not conflict with keys.
+======================================================================================================
+
+DELETE FROM order_items WHERE order_id = 1;
+
+DELETE FROM orders WHERE id = 1;
+
+======================================================================================================
