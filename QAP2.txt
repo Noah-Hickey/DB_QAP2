@@ -7,7 +7,7 @@ Student Table
 ======================================================================
 
 CREATE TABLE students (
-student_id SERIAL PRIMARY KEY,
+id SERIAL PRIMARY KEY,
 first_name VARCHAR(50) NOT NULL,
 last_name VARCHAR(50) NOT NULL,
 email VARCHAR(100) NOT NULL,
@@ -19,7 +19,7 @@ Professor Table
 ======================================================================
 
 CREATE TABLE professors (
-prof_id SERIAL PRIMARY KEY,
+id SERIAL PRIMARY KEY,
 first_name VARCHAR(50) NOT NULL,
 last_name VARCHAR(50) NOT NULL,
 department VARCHAR(100) NOT NULL
@@ -30,10 +30,11 @@ Courses Table
 ======================================================================
 
 CREATE TABLE courses (
-course_id SERIAL PRIMARY KEY,
+id SERIAL PRIMARY KEY,
 course_name VARCHAR(50) NOT NULL,
 course_description TEXT,
-FOREIGN KEY (prof_id) REFERENCES professors(prof_id)
+professor_id INT NOT NULL,
+FOREIGN KEY (professor_id) REFERENCES professors(id)
 );
 ======================================================================
 
@@ -44,7 +45,9 @@ CREATE TABLE enrollments (
 student_id INT NOT NULL,
 course_id INT NOT NULL,
 enrollment_date DATE NOT NULL,
-PRIMARY KEY (student_id,course_id)
+PRIMARY KEY (student_id,course_id),
+FOREIGN KEY (student_id) REFERENCES students(id),
+FOREIGN KEY (course_id) REFERENCES courses(id)
 );
 ======================================================================
 
@@ -52,7 +55,7 @@ PRIMARY KEY (student_id,course_id)
 Insertions into students table
 ===============================================================================================
 
-INSERT INTO students (student_id, first_name, last_name, email, school_enrollment_date)
+INSERT INTO students (id, first_name, last_name, email, school_enrollment_date)
 VALUES 
     ('1001', 'Nathaniel', 'Price', 'natprice@yahoo.com', '2023-09-12'),
 	('1002', 'Grace', 'Hickman', 'grhick99@outlook.com', '2023-09-13'),
@@ -63,7 +66,7 @@ VALUES
 
 Insertions into professors table
 ===============================================================================================
-INSERT INTO professors (prof_id, first_name, last_name, department)
+INSERT INTO professors (id, first_name, last_name, department)
 VALUES 
     ('101', 'Kenny', 'Benson', 'Mathematics'),
 	('102', 'Tara', 'McConnor', 'Anthropology'),
@@ -72,7 +75,7 @@ VALUES
 
 Insertions into courses table
 ===============================================================================================
-INSERT INTO courses (course_id, course_name, course_description, professor_id)
+INSERT INTO courses (id, course_name, course_description, professor_id)
 VALUES 
     ('101', 'Physics 101', 'Learning the basics of Pyhsics.', '103'),
 	('102', 'Mathematics 102', 'Learning fundamentals of Math.', '101'),
@@ -93,25 +96,25 @@ VALUES
 
 Retrieve names of students enrolled in Physics 101 - Got help with ChatGPT for this.
 ===============================================================================================
-SELECT CONCAT(s.first_name, ' ', s.last_name) AS full_name
-FROM students s
-JOIN enrollments e ON s.student_id = e.student_id
-JOIN courses c ON e.course_id = c.course_id
-WHERE c.course_name = 'Physics 101';
+SELECT CONCAT(first_name, ' ', last_name) AS full_name
+FROM students
+JOIN enrollments ON student_id = student_id
+JOIN courses ON course_id = course_id
+WHERE course_name = 'Physics 101';
 ===============================================================================================
 
 Retrieve names of all professors - Got help with ChatGPT for this.
 ===============================================================================================
-SELECT course_name, CONCAT(first_name, ' ', last_name) AS professor_full_name
+SELECT courses.course_name, CONCAT(professors.first_name, ' ', professors.last_name) AS professor_full_name
 FROM courses
-JOIN professors ON professor_id = prof_id;
+JOIN professors ON courses.professor_id = professors.id;
 ===============================================================================================
 
 Retrieve all courses that have students enrolled in them. - Got help with ChatGPT for this.
 ===============================================================================================
-SELECT DISTINCT c.course_name
-FROM courses c
-JOIN enrollments e ON c.course_id = e.course_id;
+SELECT courses.course_name
+FROM courses
+JOIN enrollments ON courses.id = enrollments.course_id;
 ===============================================================================================
 
 Update student email
