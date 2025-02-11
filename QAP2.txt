@@ -244,7 +244,7 @@ JOIN products ON order_items.product_id = products.id
 WHERE orders.customer_id = 1;
 ======================================================================================================
 
-Updates to simulate the reduction of stock
+Updates to simulate the reduction of stock - Got help with ChatGPT for this.
 ======================================================================================================
 UPDATE products
 SET stock_quantity = stock_quantity - (
